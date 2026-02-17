@@ -1,13 +1,24 @@
 :root {
+  /* Backgrounds */
   --bg: #f6f7fb;
   --bg-grad-1: #f6f7fb;
   --bg-grad-2: #fff6d6;
 
+  /* Surfaces */
   --card: #ffffff;
+
+  /* Text */
   --text: #101828;
   --muted: #667085;
+
+  /* Borders */
   --border: rgba(16, 24, 40, 0.08);
 
-  --accent: #facc15;
-  --accent-soft: rgba(250, 204, 21, 0.22);
+  /* Accent (soft yellow theme) */
+  --accent: #e6c35c;
+  --accent-soft: rgba(230, 195, 92, 0.28);
+
+  /* Active state (dark charcoal) */
+  --active-bg: #2f2f2f;
+  --active-text: #ffffff;
 }
