@@ -1,0 +1,30 @@
+.sidebar {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 16px;
+
+  .logo {
+    font-weight: 700;
+    font-size: 18px;
+    padding: 8px 10px;
+  }
+
+  .nav {
+    display: grid;
+    gap: 6px;
+    margin-top: 12px;
+  }
+
+  .link {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 12px;
+    color: var(--muted);
+
+    &.active {
+      background: var(--accent-soft);
+      color: var(--text);
+    }
+  }
+}
