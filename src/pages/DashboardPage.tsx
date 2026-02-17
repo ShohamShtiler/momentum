@@ -1,3 +1,5 @@
+import { StatCard } from "../cmps/StatCard";
+
 export function DashboardPage() {
   return (
     <section className="dashboard">
@@ -28,9 +30,9 @@ export function DashboardPage() {
         </div>
 
         <div className="stats">
-          <div className="stat-card">Habits: 4</div>
-          <div className="stat-card">Focus: 2h 30m</div>
-          <div className="stat-card">Streak: 12 days</div>
+          <StatCard title="Habits" value="4" />
+          <StatCard title="Focus Time" value="2h 30m" />
+          <StatCard title="Streak" value="12 days" />
         </div>
       </div>
     </section>
