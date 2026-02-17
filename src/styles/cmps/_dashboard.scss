@@ -255,3 +255,35 @@
     }
   }
 }
+
+@media (max-width: 1024px) {
+  .dashboard {
+    .topbar {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .tabs {
+        flex-wrap: wrap;
+      }
+    }
+
+    .stats {
+      grid-template-columns: 1fr;
+    }
+
+    .dashboard-content {
+      grid-template-columns: 1fr;
+    }
+
+    .hero {
+      .hero-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero-btn {
+        width: 100%;
+      }
+    }
+  }
+}
