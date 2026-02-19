@@ -4,6 +4,8 @@ import { DASHBOARD_STATS } from "../data/dashboard.data";
 export function DashboardPage() {
   const stats = DASHBOARD_STATS;
 
+  const todayIndex = new Date().getDay();
+
   return (
     <section className="dashboard">
       <div className="panel">
@@ -103,6 +105,35 @@ export function DashboardPage() {
               <div className="time">20:30</div>
               <div className="txt">Plan tomorrow</div>
             </div>
+          </div>
+        </section>
+
+        <section className="card progress-card">
+          <div className="card-header">
+            <h3>Weekly Progress</h3>
+            <button className="ghost-btn">This week</button>
+          </div>
+
+          <div className="progress-bars">
+            {[
+              { day: "Sun", val: 70 },
+              { day: "Mon", val: 40 },
+              { day: "Tue", val: 65 },
+              { day: "Wed", val: 30 },
+              { day: "Thu", val: 80 },
+              { day: "Fri", val: 55 },
+              { day: "Sat", val: 20 },
+            ].map(({ day, val }, index) => (
+              <div
+                key={day}
+                className={`bar-col ${index === todayIndex ? "is-active" : ""}`}
+              >
+                <div className="bar">
+                  <div className="bar-fill" style={{ height: `${val}%` }} />
+                </div>
+                <div className="bar-label">{day}</div>
+              </div>
+            ))}
           </div>
         </section>
       </div>
