@@ -5,12 +5,12 @@
   gap: 16px;
   padding: 24px;
   background: linear-gradient(
-    135deg,
-    #ffffff 0%,
-    #fff6d6 60%,
-    #ffeaa0 100%
+    145deg,
+    var(--bg-grad-1) 0%,
+    var(--bg-grad-2) 50%,
+    var(--bg-grad-3) 100%
   );
-
+  color: var(--text);
   box-shadow: 0 40px 80px rgba(16, 24, 40, 0.08);
 
   .app-main {

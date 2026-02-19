@@ -1,7 +1,12 @@
 import { StatCard } from "../cmps/StatCard";
 import { DASHBOARD_STATS } from "../data/dashboard.data";
 
-export function DashboardPage() {
+type DashboardPageProps = {
+  isDark: boolean;
+  onToggleTheme: () => void;
+};
+
+export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
   const stats = DASHBOARD_STATS;
 
   const todayIndex = new Date().getDay();
@@ -19,8 +24,13 @@ export function DashboardPage() {
           </div>
 
           <div className="actions">
-            <button className="icon-btn" aria-label="Settings">
-              ⚙️
+            <button
+              className="icon-btn"
+              onClick={onToggleTheme}
+              aria-label="Toggle theme"
+              title="Toggle theme"
+            >
+              {isDark ? "☀️" : "🌙"}
             </button>
             <button className="icon-btn" aria-label="Notifications">
               🔔
