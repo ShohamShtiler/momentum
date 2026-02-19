@@ -1,6 +1,17 @@
 import { StatCard } from "../cmps/StatCard";
+import { useState } from "react";
+
+type Stat = {
+  title: string;
+  value: string;
+};
 
 export function DashboardPage() {
+  const [stats] = useState<Stat[]>([
+    { title: "Habits", value: "4" },
+    { title: "Focus Time", value: "2h 30m" },
+    { title: "Streak", value: "12 days" },
+  ]);
   return (
     <section className="dashboard">
       <div className="panel">
@@ -30,9 +41,9 @@ export function DashboardPage() {
         </div>
 
         <div className="stats">
-          <StatCard title="Habits" value="4" />
-          <StatCard title="Focus Time" value="2h 30m" />
-          <StatCard title="Streak" value="12 days" />
+          {stats.map((stat) => (
+            <StatCard key={stat.title} title={stat.title} value={stat.value} />
+          ))}
         </div>
 
         <div className="hero">
