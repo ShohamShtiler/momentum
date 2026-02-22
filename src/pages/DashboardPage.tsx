@@ -1,6 +1,10 @@
 import { StatCard } from "../cmps/StatCard";
 import { DASHBOARD_STATS } from "../data/dashboard.data";
 
+import { useEffect, useState } from "react";
+import { habitService } from "../services/habit.service";
+import type { Habit } from "../types/habit.types";
+
 type DashboardPageProps = {
   isDark: boolean;
   onToggleTheme: () => void;
@@ -10,6 +14,12 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
   const stats = DASHBOARD_STATS;
 
   const todayIndex = new Date().getDay();
+
+  const [habits, setHabits] = useState<Habit[]>([]);
+
+  useEffect(() => {
+    habitService.query().then(setHabits);
+  }, []);
 
   return (
     <section className="dashboard">
@@ -76,23 +86,15 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
           </div>
 
           <ul className="habit-list">
-            <li className="habit-item">
-              <span className="dot" />
-              <span className="habit-name">Drink water</span>
-              <span className="habit-meta">6/8</span>
-            </li>
-
-            <li className="habit-item">
-              <span className="dot" />
-              <span className="habit-name">Walk</span>
-              <span className="habit-meta">20m</span>
-            </li>
-
-            <li className="habit-item">
-              <span className="dot" />
-              <span className="habit-name">Read</span>
-              <span className="habit-meta">10m</span>
-            </li>
+            {habits.map((habit) => (
+              <li key={habit.id} className="habit-item">
+                <span className="dot" />
+                <span className="habit-name">{habit.title}</span>
+                <span className="habit-meta">
+                  {habit.progress}/{habit.target}
+                </span>
+              </li>
+            ))}
           </ul>
         </section>
 
