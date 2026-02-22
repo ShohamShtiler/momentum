@@ -12,13 +12,70 @@ type DashboardPageProps = {
 
 export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
   const stats = DASHBOARD_STATS;
-
   const todayIndex = new Date().getDay();
-
   const [habits, setHabits] = useState<Habit[]>([]);
+  // const [newHabitTitle, setNewHabitTitle] = useState("");
+
+  const [isAddOpen, setIsAddOpen] = useState(false);
+  const [draftTitle, setDraftTitle] = useState("");
+  const [draftTarget, setDraftTarget] = useState<number>(1);
+  const [draftUnit, setDraftUnit] = useState<"count" | "ml" | "min">("count");
+  const [isUnitOpen, setIsUnitOpen] = useState(false);
 
   useEffect(() => {
     habitService.query().then(setHabits);
+  }, []);
+
+  // function onAddHabit() {
+  //   const title = newHabitTitle.trim();
+  //   if (!title) return;
+
+  //   habitService.addHabit(title, 1, "count").then((updatedHabits) => {
+  //     setHabits(updatedHabits);
+  //     setNewHabitTitle("");
+  //   });
+  // }
+
+  function onRemoveHabit(id: string) {
+    habitService.removeHabit(id).then((updated) => {
+      setHabits(updated);
+    });
+  }
+
+  function onOpenAddHabit() {
+    setIsAddOpen(true);
+  }
+
+  function onCloseAddHabit() {
+    setIsAddOpen(false);
+    setDraftTitle("");
+    setDraftTarget(1);
+    setDraftUnit("count");
+  }
+
+  function onSubmitAddHabit() {
+    const title = draftTitle.trim();
+    if (!title) return;
+
+    habitService.addHabit(title, draftTarget, draftUnit).then((updated) => {
+      setHabits(updated);
+      onCloseAddHabit();
+    });
+  }
+
+  useEffect(() => {
+    function onDocClick(ev: MouseEvent) {
+      const el = ev.target as HTMLElement;
+
+      // close popover if click outside
+      if (!el.closest(".habit-actions")) {
+        setIsAddOpen(false);
+        setIsUnitOpen(false);
+      }
+    }
+
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
   }, []);
 
   return (
@@ -82,7 +139,90 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
         <section className="card habits-card">
           <div className="card-header">
             <h3>Today’s Habits</h3>
-            <button className="ghost-btn">View all</button>
+            {/* <button className="ghost-btn">View all</button> */}
+            <div className="habit-actions">
+              <button
+                className="icon-btn add-btn"
+                onClick={onOpenAddHabit}
+                aria-label="Add habit"
+                title="Add habit"
+              >
+                +
+              </button>
+
+              {isAddOpen && (
+                <div
+                  className="add-popover"
+                  role="dialog"
+                  aria-label="Add habit form"
+                  onClick={(ev) => ev.stopPropagation()}
+                >
+                  <div className="field">
+                    <label>Title</label>
+                    <input
+                      value={draftTitle}
+                      onChange={(ev) => setDraftTitle(ev.target.value)}
+                      placeholder="e.g. Water"
+                      autoFocus
+                    />
+                  </div>
+
+                  <div className="row">
+                    <div className="field">
+                      <label>Target</label>
+                      <input
+                        type="number"
+                        min={1}
+                        value={draftTarget}
+                        onChange={(ev) => setDraftTarget(+ev.target.value || 1)}
+                      />
+                    </div>
+
+                    <div className="field">
+                      <label>Unit</label>
+
+                      <div className="unit-select">
+                        <button
+                          type="button"
+                          className="unit-trigger"
+                          onClick={() => setIsUnitOpen((prev) => !prev)}
+                        >
+                          {draftUnit}
+                          <span className="chev">▾</span>
+                        </button>
+
+                        {isUnitOpen && (
+                          <div className="unit-menu">
+                            {(["count", "ml", "min"] as const).map((unit) => (
+                              <button
+                                key={unit}
+                                type="button"
+                                className={`unit-option ${draftUnit === unit ? "is-active" : ""}`}
+                                onClick={() => {
+                                  setDraftUnit(unit);
+                                  setIsUnitOpen(false);
+                                }}
+                              >
+                                {unit}
+                              </button>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="popover-actions">
+                    <button className="ghost-btn" onClick={onCloseAddHabit}>
+                      Cancel
+                    </button>
+                    <button className="primary-btn" onClick={onSubmitAddHabit}>
+                      Add
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
 
           <ul className="habit-list">
@@ -90,9 +230,20 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
               <li key={habit.id} className="habit-item">
                 <span className="dot" />
                 <span className="habit-name">{habit.title}</span>
-                <span className="habit-meta">
-                  {habit.progress}/{habit.target}
-                </span>
+
+                <div className="habit-right">
+                  <span className="habit-progress">
+                    {habit.progress}/{habit.target} {habit.unit}
+                  </span>
+
+                  <button
+                    className="delete-btn"
+                    onClick={() => onRemoveHabit(habit.id)}
+                    aria-label="Delete habit"
+                  >
+                    ×
+                  </button>
+                </div>
               </li>
             ))}
           </ul>

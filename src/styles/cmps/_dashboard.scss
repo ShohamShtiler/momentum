@@ -1,8 +1,18 @@
+/* ======================================================
+   DASHBOARD ROOT
+====================================================== */
+
 .dashboard {
   display: flex;
   flex-direction: column;
   gap: 32px;
+}
 
+/* ======================================================
+   TOPBAR
+====================================================== */
+
+.dashboard {
   .topbar {
     display: flex;
     align-items: center;
@@ -33,6 +43,7 @@
         color: var(--active-text);
       }
     }
+
     .actions {
       display: flex;
       align-items: center;
@@ -56,7 +67,13 @@
       background: linear-gradient(135deg, #fff, #ffeaa0);
     }
   }
+}
 
+/* ======================================================
+   HEADER
+====================================================== */
+
+.dashboard {
   .header {
     display: flex;
     flex-direction: column;
@@ -73,6 +90,20 @@
       color: var(--muted);
       font-size: 14px;
     }
+  }
+}
+
+/* ======================================================
+   PANEL + STATS
+====================================================== */
+
+.dashboard {
+  .panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    backdrop-filter: blur(10px);
   }
 
   .stats {
@@ -100,13 +131,13 @@
       color: var(--text);
     }
   }
-  .panel {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    padding: 24px;
-    backdrop-filter: blur(10px);
-  }
+}
+
+/* ======================================================
+   HERO
+====================================================== */
+
+.dashboard {
   .hero {
     margin-top: 24px;
     background: var(--active-bg);
@@ -158,6 +189,13 @@
       }
     }
   }
+}
+
+/* ======================================================
+   GENERIC CARD
+====================================================== */
+
+.dashboard {
   .dashboard-content {
     margin-top: 24px;
     display: grid;
@@ -194,6 +232,140 @@
       color: var(--muted);
     }
   }
+}
+
+/* ======================================================
+   HABITS (Add + List)
+====================================================== */
+
+.dashboard {
+  .habit-actions {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .add-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  .add-popover {
+    position: absolute;
+    top: 44px;
+    right: 0;
+    width: 300px;
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    z-index: 20;
+  }
+
+  .field {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 10px;
+
+    label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card-strong);
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: rgba(230, 195, 92, 0.55);
+      box-shadow: 0 0 0 4px rgba(230, 195, 92, 0.18);
+    }
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .popover-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  .primary-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 8px 12px;
+    background: var(--active-bg);
+    color: var(--active-text);
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .unit-select {
+    position: relative;
+  }
+
+  .unit-trigger {
+    width: 100%;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card-strong);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .unit-menu {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgb(255 252 240);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    z-index: 50;
+  }
+
+  .unit-option {
+    width: 100%;
+    padding: 6px 10px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text);
+
+    &:hover {
+      background: var(--accent-soft);
+    }
+  }
 
   .habit-list {
     list-style: none;
@@ -205,6 +377,7 @@
     .habit-item {
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
       padding: 10px 12px;
       border-radius: 14px;
@@ -223,13 +396,43 @@
         font-weight: 600;
       }
 
-      .habit-meta {
+      .habit-right {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .delete-btn {
+        opacity: 0;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 16px;
+        transition: all 0.2s ease;
+      }
+
+      &:hover .delete-btn {
+        opacity: 1;
+      }
+
+      .delete-btn:hover {
+        color: #ff5c5c;
+      }
+
+      .habit-progress {
         color: var(--muted);
         font-size: 13px;
       }
     }
   }
+}
 
+/* ======================================================
+   SCHEDULE
+====================================================== */
+
+.dashboard {
   .schedule-list {
     display: grid;
     gap: 10px;
@@ -242,6 +445,7 @@
       border-radius: 14px;
       border: 1px solid rgba(16, 24, 40, 0.06);
       background: var(--card-strong);
+
       .time {
         font-weight: 700;
         color: var(--text);
@@ -253,7 +457,13 @@
       }
     }
   }
+}
 
+/* ======================================================
+   WEEKLY PROGRESS
+====================================================== */
+
+.dashboard {
   .progress-card {
     .progress-bars {
       display: grid;
@@ -286,14 +496,14 @@
     .bar-fill {
       width: 100%;
       border-radius: 20px;
-      background: var(--accent); // strong + matches your UI
+      background: var(--accent);
       transition: height 200ms ease;
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
     }
 
     .bar-label {
       font-size: 12px;
-      color: var(--muted); // instead of opacity
+      color: var(--muted);
     }
   }
 
@@ -305,38 +515,6 @@
     .bar-label {
       color: var(--text);
       font-weight: 600;
-    }
-  }
-}
-
-@media (max-width: 1024px) {
-  .dashboard {
-    .topbar {
-      flex-direction: column;
-      align-items: flex-start;
-
-      .tabs {
-        flex-wrap: wrap;
-      }
-    }
-
-    .stats {
-      grid-template-columns: 1fr;
-    }
-
-    .dashboard-content {
-      grid-template-columns: 1fr;
-    }
-
-    .hero {
-      .hero-content {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .hero-btn {
-        width: 100%;
-      }
     }
   }
 }
