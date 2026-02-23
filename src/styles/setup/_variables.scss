@@ -5,8 +5,13 @@
   --bg-grad-2: #fff6d6;
   --bg-grad-3: #ffeaa0;
 
+  --bg-unit: rgb(255, 252, 240);
+
   /* Surfaces */
   --card: rgba(255, 252, 240, 0.65);
+
+  /* Theme */
+  --theme:#2f2f2f;
 
   /* Text */
   --text: #101828;
@@ -29,9 +34,15 @@
     --bg-grad-1: #0b0d12;
     --bg-grad-2: #171a22;
 
+    --bg-unit: rgb(86 86 86);
+
     /* Surfaces */
     --card: rgba(255, 255, 255, 0.06); /* glassy */
     --card-strong: rgba(255, 255, 255, 0.1);
+
+    /* Theme */
+  --theme:#e6c35c;
+
 
     /* Text */
     --text: #eef2ff;

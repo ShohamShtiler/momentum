@@ -5,6 +5,10 @@ import { useEffect, useState } from "react";
 import { habitService } from "../services/habit.service";
 import type { Habit } from "../types/habit.types";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faCircleHalfStroke, faBell, faPlus } from "@fortawesome/free-solid-svg-icons"
+import { faUser } from "@fortawesome/free-regular-svg-icons"
+
 type DashboardPageProps = {
   isDark: boolean;
   onToggleTheme: () => void;
@@ -92,17 +96,21 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
 
           <div className="actions">
             <button
-              className="icon-btn"
+              className={`icon-btn theme-btn ${isDark ? "is-dark" : ""}`}
               onClick={onToggleTheme}
               aria-label="Toggle theme"
-              title="Toggle theme"
             >
-              {isDark ? "☀️" : "🌙"}
+              <FontAwesomeIcon icon={faCircleHalfStroke} />
             </button>
-            <button className="icon-btn" aria-label="Notifications">
-              🔔
+            <button
+              className="icon-btn notification-btn"
+              aria-label="Notifications"
+            >
+              <FontAwesomeIcon icon={faBell} />
             </button>
-            <div className="avatar" aria-label="Profile" />
+            <div className={`avatar ${isDark ? "dark-avatar" : ""}`}>
+              <FontAwesomeIcon icon={faUser} />
+            </div>
           </div>
         </div>
 
@@ -147,7 +155,7 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
                 aria-label="Add habit"
                 title="Add habit"
               >
-                +
+                <FontAwesomeIcon icon={faPlus} />
               </button>
 
               {isAddOpen && (
@@ -252,7 +260,9 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
         <section className="card schedule-card">
           <div className="card-header">
             <h3>Upcoming</h3>
-            <button className="ghost-btn">+</button>
+            <button className="ghost-btn">
+              <FontAwesomeIcon icon={faPlus} />
+            </button>
           </div>
 
           <div className="schedule-list">
