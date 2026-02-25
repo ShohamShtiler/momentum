@@ -411,58 +411,282 @@
     display: grid;
     gap: 10px;
 
-    .habit-item {
+    .habit-row {
+      position: relative;
+      overflow: visible;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      padding: 10px 12px;
-      border-radius: 14px;
+      gap: 12px;
+
+      padding: 14px;
+      border-radius: 16px;
       border: 1px solid rgba(16, 24, 40, 0.06);
       background: var(--card-strong);
+    }
 
-      .dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: var(--accent);
-      }
+    .habit-fill {
+      position: absolute;
+      inset: 0;
+      width: 0%;
+      background: var(--accent-soft);
+      border-radius: 16px;
+      pointer-events: none;
+      transition: width 260ms ease;
+    }
 
-      .habit-name {
-        flex: 1;
-        font-weight: 600;
-      }
+    .habit-left {
+      position: relative;
+      display: grid;
+      gap: 6px;
+    }
 
-      .habit-right {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
+    .habit-title {
+      font-weight: 700;
+    }
 
-      .delete-btn {
-        opacity: 0;
-        border: none;
-        background: transparent;
-        color: var(--muted);
-        cursor: pointer;
-        font-size: 16px;
-        transition: all 0.2s ease;
-      }
+    .habit-pill {
+      width: fit-content;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.35);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
 
-      &:hover .delete-btn {
-        opacity: 1;
-      }
+    .habit-actions-right {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-      .delete-btn:hover {
-        color: #ff5c5c;
-      }
+    .color-btn {
+      opacity: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      transition: all 0.2s ease;
+    }
 
-      .habit-progress {
-        color: var(--muted);
-        font-size: 13px;
-      }
+    .habit-row:hover .color-btn {
+      opacity: 1;
+    }
+
+    .color-menu {
+      position: absolute;
+      top: 44px;
+      right: 86px;
+      display: grid;
+      grid-template-columns: repeat(5, 18px);
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+
+    .color-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .habit-row.color-mint .habit-fill,
+    .color-dot.mint {
+      background: rgb(186, 255, 201);
+    }
+
+    .habit-row.color-butter .habit-fill,
+    .color-dot.butter {
+      background: rgb(255, 255, 186);
+    }
+
+    .habit-row.color-sky .habit-fill,
+    .color-dot.sky {
+      background: rgb(186, 225, 255);
+    }
+
+    .habit-row.color-salmon .habit-fill,
+    .color-dot.salmon {
+      background: rgb(255, 179, 186);
+    }
+
+    .habit-row.color-lavender .habit-fill,
+    .color-dot.lavender {
+      background: rgb(218, 186, 255);
+    }
+
+    .habit-row.color-peach .habit-fill,
+    .color-dot.peach {
+      background: rgb(255, 218, 193);
+    }
+
+    .habit-row.color-aqua .habit-fill,
+    .color-dot.aqua {
+      background: rgb(186, 255, 244);
+    }
+
+    .habit-row.color-lemon .habit-fill,
+    .color-dot.lemon {
+      background: rgb(255, 247, 186);
+    }
+
+    .habit-row.color-rose .habit-fill,
+    .color-dot.rose {
+      background: rgb(255, 204, 229);
+    }
+
+    .habit-row.color-ice .habit-fill,
+    .color-dot.ice {
+      background: rgb(204, 243, 255);
+    }
+    .color-reset {
+      grid-column: 1 / -1; /* takes full width under the dots */
+      justify-self: end;
+      margin-left: 6px;
+      border: 1px solid var(--border);
+      background: var(--card-strong);
+      border-radius: 999px;
+      padding: 6px 10px;
+      cursor: pointer;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .add-progress-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+    }
+
+    .delete-btn {
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px; // icon size
+      transition: all 0.2s ease;
+    }
+
+    .habit-row:hover .delete-btn {
+      opacity: 1;
+    }
+
+    .delete-btn:hover {
+      color: #ff5c5c;
     }
   }
+}
+/* keypad */
+.np-backdrop {
+  position: fixed;
+  display: grid;
+  place-items: end center;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 22px;
+  z-index: 999;
+}
+
+.np-modal {
+  width: min(420px, 100%);
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 24px;
+  padding: 18px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(10px);
+}
+
+.np-header {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.np-value {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+  justify-content: center;
+}
+.np-number {
+  font-size: 52px;
+  font-weight: 800;
+}
+.np-unit {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.np-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.np-key {
+  display: grid;
+  place-items: center;
+  height: 64px;
+  border-radius: 18px;
+  border: 1px solid var(--border);
+  background: var(--card-strong);
+  color: var(--text);
+  font-size: 22px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.np-action {
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.np-ok {
+  height: 64px;
+  border-radius: 18px;
+  background: var(--active-bg);
+  color: var(--active-text);
+  border: 1px solid transparent;
+}
+
+.np-ghost {
+  height: 54px;
+  font-size: 20px;
+  opacity: 0.9;
+}
+
+.np-footer {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }
 
 /* ======================================================

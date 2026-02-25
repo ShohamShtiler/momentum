@@ -1,4 +1,4 @@
-import type { Habit, HabitUnit } from "../types/habit.types";
+import type { Habit, HabitUnit, HabitColor } from "../types/habit.types";
 import { DEMO_HABITS } from "../data/habit.data";
 
 const STORAGE_KEY = "momentum.habits";
@@ -8,6 +8,8 @@ export const habitService = {
   addHabit,
   removeHabit,
   saveAll,
+  updateProgress,
+  updateColor,
 };
 
 function query(): Promise<Habit[]> {
@@ -41,6 +43,38 @@ function removeHabit(habitId: string): Promise<Habit[]> {
   const updated = habits.filter((h) => h.id !== habitId);
   _saveToStorage(updated);
   return Promise.resolve(updated);
+}
+
+function updateProgress(habitId: string, delta: number) {
+  return query().then((habits) => {
+    const idx = habits.findIndex((h) => h.id === habitId);
+    if (idx === -1) return habits;
+
+    const habit = habits[idx];
+    const nextProgress = Math.max(
+      0,
+      Math.min(habit.target, habit.progress + delta),
+    );
+
+    const updatedHabit = { ...habit, progress: nextProgress };
+    const updatedHabits = habits.map((h) =>
+      h.id === habitId ? updatedHabit : h,
+    );
+
+    _saveToStorage(updatedHabits);
+    return updatedHabits;
+  });
+}
+
+function updateColor(habitId: string, color?: HabitColor): Promise<Habit[]> {
+  const habits = _loadFromStorage()
+
+  const updated = habits.map((h) =>
+    h.id === habitId ? { ...h, color } : h
+  )
+
+  _saveToStorage(updated)
+  return Promise.resolve(updated)
 }
 
 function saveAll(habits: Habit[]): Promise<Habit[]> {

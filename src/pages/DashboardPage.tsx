@@ -4,10 +4,16 @@ import { DASHBOARD_STATS } from "../data/dashboard.data";
 import { useEffect, useState } from "react";
 import { habitService } from "../services/habit.service";
 import type { Habit } from "../types/habit.types";
+import { NumberPadModal } from "../cmps/NumberPadModal";
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { faCircleHalfStroke, faBell, faPlus } from "@fortawesome/free-solid-svg-icons"
-import { faUser } from "@fortawesome/free-regular-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faCircleHalfStroke,
+  faBell,
+  faPlus,
+  faPalette,
+} from "@fortawesome/free-solid-svg-icons";
+import { faUser, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 type DashboardPageProps = {
   isDark: boolean;
@@ -18,7 +24,6 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
   const stats = DASHBOARD_STATS;
   const todayIndex = new Date().getDay();
   const [habits, setHabits] = useState<Habit[]>([]);
-  // const [newHabitTitle, setNewHabitTitle] = useState("");
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [draftTitle, setDraftTitle] = useState("");
@@ -26,19 +31,12 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
   const [draftUnit, setDraftUnit] = useState<"count" | "ml" | "min">("count");
   const [isUnitOpen, setIsUnitOpen] = useState(false);
 
+  const [activeHabitId, setActiveHabitId] = useState<string | null>(null);
+  const [colorForId, setColorForId] = useState<string | null>(null);
+
   useEffect(() => {
     habitService.query().then(setHabits);
   }, []);
-
-  // function onAddHabit() {
-  //   const title = newHabitTitle.trim();
-  //   if (!title) return;
-
-  //   habitService.addHabit(title, 1, "count").then((updatedHabits) => {
-  //     setHabits(updatedHabits);
-  //     setNewHabitTitle("");
-  //   });
-  // }
 
   function onRemoveHabit(id: string) {
     habitService.removeHabit(id).then((updated) => {
@@ -67,6 +65,27 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
     });
   }
 
+  function onSetHabitColor(habitId: string, color?: any) {
+    habitService.updateColor(habitId, color).then(setHabits);
+    setColorForId(null);
+  }
+
+  function onOpenPad(habitId: string) {
+    setActiveHabitId(habitId);
+  }
+
+  function onClosePad() {
+    setActiveHabitId(null);
+  }
+
+  function onAddAmount(amount: number) {
+    if (!activeHabitId) return;
+    habitService.updateProgress(activeHabitId, amount).then((updated) => {
+      setHabits(updated);
+      onClosePad();
+    });
+  }
+
   useEffect(() => {
     function onDocClick(ev: MouseEvent) {
       const el = ev.target as HTMLElement;
@@ -81,6 +100,19 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
     document.addEventListener("click", onDocClick);
     return () => document.removeEventListener("click", onDocClick);
   }, []);
+
+  const COLORS = [
+    "mint",
+    "butter",
+    "sky",
+    "salmon",
+    "lavender",
+    "peach",
+    "aqua",
+    "lemon",
+    "rose",
+    "ice",
+  ] as const;
 
   return (
     <section className="dashboard">
@@ -234,27 +266,98 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
           </div>
 
           <ul className="habit-list">
-            {habits.map((habit) => (
-              <li key={habit.id} className="habit-item">
-                <span className="dot" />
-                <span className="habit-name">{habit.title}</span>
+            {habits.map((habit) => {
+              const pct = habit.target
+                ? Math.min(100, (habit.progress / habit.target) * 100)
+                : 0;
 
-                <div className="habit-right">
-                  <span className="habit-progress">
-                    {habit.progress}/{habit.target} {habit.unit}
-                  </span>
+              return (
+                <li
+                  key={habit.id}
+                  className={`habit-row ${habit.color ? `color-${habit.color}` : ""}`}
+                >
+                  <div className="habit-fill" style={{ width: `${pct}%` }} />
 
-                  <button
-                    className="delete-btn"
-                    onClick={() => onRemoveHabit(habit.id)}
-                    aria-label="Delete habit"
-                  >
-                    ×
-                  </button>
-                </div>
-              </li>
-            ))}
+                  <div className="habit-left">
+                    <div className="habit-title">{habit.title}</div>
+                    <div className="habit-pill">
+                      {habit.progress}/{habit.target} {habit.unit}
+                    </div>
+                  </div>
+
+                  <div className="habit-actions-right">
+                    <button
+                      className="color-btn"
+                      onClick={() =>
+                        setColorForId(colorForId === habit.id ? null : habit.id)
+                      }
+                      aria-label="Change color"
+                      title="Change color"
+                    >
+                      <FontAwesomeIcon icon={faPalette} />
+                    </button>
+                    {/* const COLORS = [ "yellow", "blue", "red", "green", "purple",
+                    "pink", "teal", "orange", "indigo", "cyan", "lime", "gray",
+                    ] as const */}
+                    {colorForId === habit.id && (
+                      <div
+                        className="color-menu"
+                        role="menu"
+                        aria-label="Pick a color"
+                      >
+                        {COLORS.map((c) => (
+                          <button
+                            key={c}
+                            type="button"
+                            className={`color-dot ${c}`}
+                            onClick={() => onSetHabitColor(habit.id, c)}
+                            aria-label={c}
+                            title={c}
+                          />
+                        ))}
+
+                        <button
+                          type="button"
+                          className="color-reset"
+                          onClick={() => onSetHabitColor(habit.id, undefined)}
+                        >
+                          Default
+                        </button>
+                      </div>
+                    )}
+                    <button
+                      className="add-progress-btn"
+                      onClick={() => onOpenPad(habit.id)}
+                    >
+                      <FontAwesomeIcon icon={faPlus} />
+                    </button>
+                    <button
+                      className="delete-btn"
+                      onClick={() => onRemoveHabit(habit.id)}
+                      aria-label="Delete habit"
+                      title="Delete habit"
+                    >
+                      <FontAwesomeIcon icon={faTrashCan} />
+                    </button>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
+          {activeHabitId &&
+            (() => {
+              const habit = habits.find((h) => h.id === activeHabitId);
+              if (!habit) return null;
+
+              return (
+                <NumberPadModal
+                  title={habit.title}
+                  unit={habit.unit}
+                  onClose={onClosePad}
+                  onSubmit={onAddAmount}
+                />
+              );
+            })()}
         </section>
 
         <section className="card schedule-card">
