@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDeleteLeft, faCheck } from "@fortawesome/free-solid-svg-icons";
+import type { HabitUnit } from "../types/habit.types";
 
 type Props = {
-  title: string;
-  unit: string;
+  unit: HabitUnit;
   onClose: () => void;
   onSubmit: (amount: number) => void;
 };
@@ -12,8 +12,12 @@ type Props = {
 export function NumberPadModal({ unit, onClose, onSubmit }: Props) {
   const [val, setVal] = useState("");
 
-  function onPress(num: string) {
-    setVal((prev) => (prev + num).replace(/^0+(?=\d)/, ""));
+  function onPress(ch: string) {
+    setVal((prev) => {
+      if (ch === "." && prev.includes(".")) return prev;
+      const next = (prev + ch).replace(/^0+(?=\d)/, "");
+      return next;
+    });
   }
 
   function onBackspace() {
@@ -25,8 +29,8 @@ export function NumberPadModal({ unit, onClose, onSubmit }: Props) {
   }
 
   function onOk() {
-    const amount = +val;
-    if (!amount || amount <= 0) return;
+    const amount = Number(val);
+    if (!Number.isFinite(amount) || amount <= 0) return;
     onSubmit(amount);
   }
 

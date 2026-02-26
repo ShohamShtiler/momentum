@@ -1,17 +1,15 @@
 export type HabitUnit = "count" | "ml" | "min";
 export type HabitColor =
-  | "yellow"
-  | "blue"
-  | "red"
-  | "green"
-  | "purple"
-  | "pink"
-  | "teal"
-  | "orange"
-  | "indigo"
-  | "cyan"
-  | "lime"
-  | "gray";
+  | "mint"
+  | "butter"
+  | "sky"
+  | "salmon"
+  | "lavender"
+  | "peach"
+  | "aqua"
+  | "lemon"
+  | "rose"
+  | "ice";
 
 export type HabitHistory = Record<string, number>;
 

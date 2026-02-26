@@ -3,7 +3,8 @@ import { DASHBOARD_STATS } from "../data/dashboard.data";
 
 import { useEffect, useState } from "react";
 import { habitService } from "../services/habit.service";
-import type { Habit } from "../types/habit.types";
+import type { Habit, HabitColor } from "../types/habit.types";
+
 import { NumberPadModal } from "../cmps/NumberPadModal";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -65,7 +66,7 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
     });
   }
 
-  function onSetHabitColor(habitId: string, color?: any) {
+  function onSetHabitColor(habitId: string, color?: HabitColor) {
     habitService.updateColor(habitId, color).then(setHabits);
     setColorForId(null);
   }
@@ -91,9 +92,17 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
       const el = ev.target as HTMLElement;
 
       // close popover if click outside
-      if (!el.closest(".habit-actions")) {
+      const isInsideHabitsUI =
+        el.closest(".habit-actions") ||
+        el.closest(".habit-actions-right") ||
+        el.closest(".color-menu") ||
+        el.closest(".add-popover") ||
+        el.closest(".unit-menu");
+
+      if (!isInsideHabitsUI) {
         setIsAddOpen(false);
         setIsUnitOpen(false);
+        setColorForId(null);
       }
     }
 
@@ -351,7 +360,6 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
 
               return (
                 <NumberPadModal
-                  title={habit.title}
                   unit={habit.unit}
                   onClose={onClosePad}
                   onSubmit={onAddAmount}

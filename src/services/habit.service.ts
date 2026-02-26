@@ -13,15 +13,8 @@ export const habitService = {
 };
 
 function query(): Promise<Habit[]> {
-  const habits = _loadFromStorage();
-
-  // ✅ daily reset + migrate old data → normalized habits
-  const normalized = habits.map(_ensureHabitForToday);
-
-  // ✅ only save if something changed
-  _saveToStorage(normalized);
-
-  return Promise.resolve(normalized);
+  const habits = _loadFromStorage(); // already normalized
+  return Promise.resolve(habits);
 }
 
 function addHabit(
@@ -55,57 +48,57 @@ function removeHabit(habitId: string): Promise<Habit[]> {
   return Promise.resolve(updated);
 }
 
-function updateProgress(habitId: string, delta: number) {
-  return query().then((habits) => {
-    const today = _getDateKey();
+// ✅ keypad sends amount to ADD (delta)
+function updateProgress(habitId: string, delta: number): Promise<Habit[]> {
+  const today = _getDateKey();
+  const habits = _loadFromStorage();
 
-    const updatedHabits = habits.map((h) => {
-      if (h.id !== habitId) return h;
+  const updated = habits.map((h) => {
+    if (h.id !== habitId) return h;
 
-      const history = h.history
-        ? { ...h.history }
-        : { [today]: h.progress || 0 };
-      const curr = history[today] ?? 0;
+    const history = h.history ? { ...h.history } : { [today]: h.progress || 0 };
+    const curr = history[today] ?? 0;
 
-      const nextProgress = Math.max(0, Math.min(h.target, curr + delta));
+    const nextProgress = Math.max(0, Math.min(h.target, curr + delta));
+    history[today] = nextProgress;
 
-      history[today] = nextProgress;
-
-      return {
-        ...h,
-        history,
-        progress: nextProgress, // keep UI working
-        lastUpdated: today,
-      };
-    });
-
-    _saveToStorage(updatedHabits);
-    return updatedHabits;
+    return {
+      ...h,
+      history,
+      progress: nextProgress,
+      lastUpdated: today,
+    };
   });
+
+  _saveToStorage(updated);
+  return Promise.resolve(updated);
 }
 
 function updateColor(habitId: string, color?: HabitColor): Promise<Habit[]> {
   const habits = _loadFromStorage();
 
-  const updated = habits
-    .map((h) => (h.id === habitId ? { ...h, color } : h))
-    .map(_ensureHabitForToday);
+  const updated = habits.map((h) => (h.id === habitId ? { ...h, color } : h));
 
   _saveToStorage(updated);
   return Promise.resolve(updated);
 }
 
 function saveAll(habits: Habit[]): Promise<Habit[]> {
-  _saveToStorage(habits);
-  return Promise.resolve(habits);
+  const normalized = habits.map(_ensureHabitForToday);
+  _saveToStorage(normalized);
+  return Promise.resolve(normalized);
 }
 
 function _loadFromStorage(): Habit[] {
   const json = localStorage.getItem(STORAGE_KEY);
-  if (json) return JSON.parse(json);
+  const rawHabits: Habit[] = json ? JSON.parse(json) : DEMO_HABITS;
 
-  _saveToStorage(DEMO_HABITS);
-  return DEMO_HABITS;
+  const normalized = rawHabits.map(_ensureHabitForToday);
+
+  // If storage was empty OR migration changed something → persist normalized
+  _saveToStorage(normalized);
+
+  return normalized;
 }
 
 function _saveToStorage(habits: Habit[]) {
@@ -116,14 +109,17 @@ function _getDateKey(date = new Date()) {
   return date.toISOString().slice(0, 10); // YYYY-MM-DD
 }
 
-function _ensureHabitForToday(habit: Habit) {
+function _ensureHabitForToday(habit: Habit): Habit {
   const today = _getDateKey();
+
   const history = habit.history ? { ...habit.history } : {};
 
-  if (!habit.history && habit.progress > 0) {
-    history[today] = habit.progress;
+  // Migration: old habits had only "progress"
+  if (!habit.history) {
+    history[today] = habit.progress || 0;
   }
 
+  // Daily reset: if not updated today, today progress should be 0 (unless exists)
   if (habit.lastUpdated !== today) {
     if (history[today] == null) history[today] = 0;
   }
