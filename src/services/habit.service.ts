@@ -62,11 +62,14 @@ function updateProgress(habitId: string, delta: number): Promise<Habit[]> {
     const nextProgress = Math.max(0, Math.min(h.target, curr + delta));
     history[today] = nextProgress;
 
+    const streak = _calcStreak(history, h.target, today);
+
     return {
       ...h,
       history,
       progress: nextProgress,
       lastUpdated: today,
+      streak,
     };
   });
 
@@ -109,6 +112,30 @@ function _getDateKey(date = new Date()) {
   return date.toISOString().slice(0, 10); // YYYY-MM-DD
 }
 
+function _addDays(dateKey: string, diff: number) {
+  const d = new Date(dateKey);
+  d.setDate(d.getDate() + diff);
+  return _getDateKey(d);
+}
+
+function _calcStreak(
+  history: Record<string, number>,
+  target: number,
+  todayKey: string,
+) {
+  let streak = 0;
+
+  // If today isn't completed, start counting from yesterday
+  let cursor = history[todayKey] >= target ? todayKey : _addDays(todayKey, -1);
+
+  while (history[cursor] >= target) {
+    streak++;
+    cursor = _addDays(cursor, -1);
+  }
+
+  return streak;
+}
+
 function _ensureHabitForToday(habit: Habit): Habit {
   const today = _getDateKey();
 
@@ -125,12 +152,14 @@ function _ensureHabitForToday(habit: Habit): Habit {
   }
 
   const todayProgress = history[today] ?? 0;
+  const streak = _calcStreak(history, habit.target, today);
 
   return {
     ...habit,
     history,
     progress: todayProgress,
     lastUpdated: today,
+    streak,
   };
 }
 

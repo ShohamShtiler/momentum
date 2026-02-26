@@ -3,7 +3,7 @@ import { DASHBOARD_STATS } from "../data/dashboard.data";
 
 import { useEffect, useState } from "react";
 import { habitService } from "../services/habit.service";
-import type { Habit, HabitColor } from "../types/habit.types";
+import type { Habit, HabitColor, HabitUnit } from "../types/habit.types";
 
 import { NumberPadModal } from "../cmps/NumberPadModal";
 
@@ -15,6 +15,9 @@ import {
   faPalette,
 } from "@fortawesome/free-solid-svg-icons";
 import { faUser, faTrashCan } from "@fortawesome/free-regular-svg-icons";
+
+import Lottie from "lottie-react";
+import doneAnim from "../assets/lottie/done.json";
 
 type DashboardPageProps = {
   isDark: boolean;
@@ -29,7 +32,7 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [draftTitle, setDraftTitle] = useState("");
   const [draftTarget, setDraftTarget] = useState<number>(1);
-  const [draftUnit, setDraftUnit] = useState<"count" | "ml" | "min">("count");
+  const [draftUnit, setDraftUnit] = useState<HabitUnit>("count");
   const [isUnitOpen, setIsUnitOpen] = useState(false);
 
   const [activeHabitId, setActiveHabitId] = useState<string | null>(null);
@@ -242,7 +245,9 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
 
                         {isUnitOpen && (
                           <div className="unit-menu">
-                            {(["count", "ml", "min"] as const).map((unit) => (
+                            {(
+                              ["count", "ml", "min", "steps", "km"] as const
+                            ).map((unit) => (
                               <button
                                 key={unit}
                                 type="button"
@@ -280,6 +285,8 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
                 ? Math.min(100, (habit.progress / habit.target) * 100)
                 : 0;
 
+              const isCompleted = habit.progress >= habit.target;
+
               return (
                 <li
                   key={habit.id}
@@ -288,7 +295,16 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
                   <div className="habit-fill" style={{ width: `${pct}%` }} />
 
                   <div className="habit-left">
-                    <div className="habit-title">{habit.title}</div>
+                    <div className="habit-title-row">
+                      <div className="habit-title">{habit.title}</div>
+
+                      {habit.streak > 0 && (
+                        <div className="habit-streak">
+                          🔥 {habit.streak}{" "}
+                          {habit.streak === 1 ? "Day" : "Days"}
+                        </div>
+                      )}
+                    </div>
                     <div className="habit-pill">
                       {habit.progress}/{habit.target} {habit.unit}
                     </div>
@@ -305,9 +321,6 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
                     >
                       <FontAwesomeIcon icon={faPalette} />
                     </button>
-                    {/* const COLORS = [ "yellow", "blue", "red", "green", "purple",
-                    "pink", "teal", "orange", "indigo", "cyan", "lime", "gray",
-                    ] as const */}
                     {colorForId === habit.id && (
                       <div
                         className="color-menu"
@@ -334,12 +347,29 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
                         </button>
                       </div>
                     )}
-                    <button
-                      className="add-progress-btn"
-                      onClick={() => onOpenPad(habit.id)}
-                    >
-                      <FontAwesomeIcon icon={faPlus} />
-                    </button>
+                    {!isCompleted ? (
+                      <button
+                        className="add-progress-btn"
+                        onClick={() => onOpenPad(habit.id)}
+                        aria-label="Add progress"
+                        title="Add progress"
+                      >
+                        <FontAwesomeIcon icon={faPlus} />
+                      </button>
+                    ) : (
+                      <div className="habit-done" title="Completed today">
+                        <Lottie
+                          animationData={doneAnim}
+                          loop={false}
+                          autoplay
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            transform: "scale(1.4)",
+                          }}
+                        />
+                      </div>
+                    )}
                     <button
                       className="delete-btn"
                       onClick={() => onRemoveHabit(habit.id)}

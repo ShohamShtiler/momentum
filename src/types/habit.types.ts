@@ -1,4 +1,4 @@
-export type HabitUnit = "count" | "ml" | "min";
+export type HabitUnit = "count" | "ml" | "min" | "steps" | "km";
 export type HabitColor =
   | "mint"
   | "butter"

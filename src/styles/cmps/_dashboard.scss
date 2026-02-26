@@ -286,11 +286,13 @@
     width: 34px;
     height: 34px;
     border-radius: 12px;
+    border: 1px solid black;
     display: grid;
     place-items: center;
     font-size: 14px;
     font-weight: 700;
     cursor: pointer;
+    background-color: inherit;
   }
 
   .add-popover {
@@ -439,6 +441,21 @@
       position: relative;
       display: grid;
       gap: 6px;
+
+      .habit-title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .habit-streak {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 20px;
+        background: rgba(255, 120, 0, 0.12);
+        color: #ff7a00;
+      }
     }
 
     .habit-title {
@@ -461,6 +478,27 @@
       display: flex;
       align-items: center;
       gap: 10px;
+
+      .habit-done {
+        width: 40px; // match your + button
+        height: 40px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        // smooth transition
+        animation: fadeInDone 0.25s ease;
+      }
+
+      @keyframes fadeInDone {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
     }
 
     .color-btn {
@@ -560,7 +598,7 @@
       margin-left: 6px;
       border: 1px solid var(--border);
       background: var(--card-strong);
-      border-radius: 999px;
+      border-radius: 20px;
       padding: 6px 10px;
       cursor: pointer;
       color: var(--muted);
@@ -571,7 +609,7 @@
     .add-progress-btn {
       width: 40px;
       height: 40px;
-      border-radius: 999px;
+      border-radius: 20px;
       border: 1px solid var(--border);
       background: var(--card);
       cursor: pointer;
