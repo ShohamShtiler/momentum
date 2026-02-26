@@ -14,7 +14,14 @@ export const habitService = {
 
 function query(): Promise<Habit[]> {
   const habits = _loadFromStorage();
-  return Promise.resolve(habits);
+
+  // ✅ daily reset + migrate old data → normalized habits
+  const normalized = habits.map(_ensureHabitForToday);
+
+  // ✅ only save if something changed
+  _saveToStorage(normalized);
+
+  return Promise.resolve(normalized);
 }
 
 function addHabit(
@@ -23,6 +30,7 @@ function addHabit(
   unit: HabitUnit = "count",
 ): Promise<Habit[]> {
   const habits = _loadFromStorage();
+  const today = _getDateKey();
 
   const newHabit: Habit = {
     id: _makeId(),
@@ -31,6 +39,8 @@ function addHabit(
     progress: 0,
     unit,
     streak: 0,
+    history: { [today]: 0 },
+    lastUpdated: today,
   };
 
   const updated = [newHabit, ...habits];
@@ -47,19 +57,27 @@ function removeHabit(habitId: string): Promise<Habit[]> {
 
 function updateProgress(habitId: string, delta: number) {
   return query().then((habits) => {
-    const idx = habits.findIndex((h) => h.id === habitId);
-    if (idx === -1) return habits;
+    const today = _getDateKey();
 
-    const habit = habits[idx];
-    const nextProgress = Math.max(
-      0,
-      Math.min(habit.target, habit.progress + delta),
-    );
+    const updatedHabits = habits.map((h) => {
+      if (h.id !== habitId) return h;
 
-    const updatedHabit = { ...habit, progress: nextProgress };
-    const updatedHabits = habits.map((h) =>
-      h.id === habitId ? updatedHabit : h,
-    );
+      const history = h.history
+        ? { ...h.history }
+        : { [today]: h.progress || 0 };
+      const curr = history[today] ?? 0;
+
+      const nextProgress = Math.max(0, Math.min(h.target, curr + delta));
+
+      history[today] = nextProgress;
+
+      return {
+        ...h,
+        history,
+        progress: nextProgress, // keep UI working
+        lastUpdated: today,
+      };
+    });
 
     _saveToStorage(updatedHabits);
     return updatedHabits;
@@ -67,14 +85,14 @@ function updateProgress(habitId: string, delta: number) {
 }
 
 function updateColor(habitId: string, color?: HabitColor): Promise<Habit[]> {
-  const habits = _loadFromStorage()
+  const habits = _loadFromStorage();
 
-  const updated = habits.map((h) =>
-    h.id === habitId ? { ...h, color } : h
-  )
+  const updated = habits
+    .map((h) => (h.id === habitId ? { ...h, color } : h))
+    .map(_ensureHabitForToday);
 
-  _saveToStorage(updated)
-  return Promise.resolve(updated)
+  _saveToStorage(updated);
+  return Promise.resolve(updated);
 }
 
 function saveAll(habits: Habit[]): Promise<Habit[]> {
@@ -92,6 +110,32 @@ function _loadFromStorage(): Habit[] {
 
 function _saveToStorage(habits: Habit[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(habits));
+}
+
+function _getDateKey(date = new Date()) {
+  return date.toISOString().slice(0, 10); // YYYY-MM-DD
+}
+
+function _ensureHabitForToday(habit: Habit) {
+  const today = _getDateKey();
+  const history = habit.history ? { ...habit.history } : {};
+
+  if (!habit.history && habit.progress > 0) {
+    history[today] = habit.progress;
+  }
+
+  if (habit.lastUpdated !== today) {
+    if (history[today] == null) history[today] = 0;
+  }
+
+  const todayProgress = history[today] ?? 0;
+
+  return {
+    ...habit,
+    history,
+    progress: todayProgress,
+    lastUpdated: today,
+  };
 }
 
 function _makeId(length = 6) {

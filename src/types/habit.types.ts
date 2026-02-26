@@ -13,6 +13,8 @@ export type HabitColor =
   | "lime"
   | "gray";
 
+export type HabitHistory = Record<string, number>;
+
 export type Habit = {
   id: string;
   title: string;
@@ -21,4 +23,6 @@ export type Habit = {
   unit: HabitUnit;
   streak: number;
   color?: HabitColor;
+  history?: HabitHistory;
+  lastUpdated?: string;
 };
