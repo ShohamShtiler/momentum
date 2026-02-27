@@ -286,7 +286,8 @@
     width: 34px;
     height: 34px;
     border-radius: 12px;
-    border: 1px solid black;
+    border: 1px solid var(--text);
+    color: var(--text);
     display: grid;
     place-items: center;
     font-size: 14px;
@@ -432,9 +433,13 @@
       inset: 0;
       width: 0%;
       background: var(--accent-soft);
-      border-radius: 16px;
+      border-radius: 16px 0 0 16px;
       pointer-events: none;
       transition: width 260ms ease;
+    }
+
+    .habit-fill.is-full {
+      border-radius: 16px;
     }
 
     .habit-left {
@@ -513,6 +518,10 @@
       place-items: center;
       color: var(--muted);
       transition: all 0.2s ease;
+
+      &:hover {
+         scale: 1.1;
+      }
     }
 
     .habit-row:hover .color-btn {
@@ -547,51 +556,81 @@
     .color-dot.mint {
       background: rgb(186, 255, 201);
     }
+    .habit-row.color-mint {
+      background: rgba(186, 255, 201, 0.3);
+    }
 
     .habit-row.color-butter .habit-fill,
     .color-dot.butter {
       background: rgb(255, 255, 186);
+    }
+    .habit-row.color-butter {
+      background: rgba(255, 255, 186, 0.3);
     }
 
     .habit-row.color-sky .habit-fill,
     .color-dot.sky {
       background: rgb(186, 225, 255);
     }
+    .habit-row.color-sky {
+      background: rgba(186, 225, 255, 0.3);
+    }
 
     .habit-row.color-salmon .habit-fill,
     .color-dot.salmon {
       background: rgb(255, 179, 186);
+    }
+    .habit-row.color-salmon {
+      background: rgba(255, 179, 186, 0.3);
     }
 
     .habit-row.color-lavender .habit-fill,
     .color-dot.lavender {
       background: rgb(218, 186, 255);
     }
+    .habit-row.color-lavender {
+      background: rgba(218, 186, 255, 0.3);
+    }
 
     .habit-row.color-peach .habit-fill,
     .color-dot.peach {
       background: rgb(255, 218, 193);
+    }
+    .habit-row.color-peach{
+       background: rgba(255, 218, 193, 0.3);
     }
 
     .habit-row.color-aqua .habit-fill,
     .color-dot.aqua {
       background: rgb(186, 255, 244);
     }
+    .habit-row.color-aqua{
+      background: rgba(186, 255, 244, 0.3);
+    }
 
     .habit-row.color-lemon .habit-fill,
     .color-dot.lemon {
       background: rgb(255, 247, 186);
     }
+.habit-row.color-lemon {
+  background: rgba(255, 247, 186, 0.3);
+}
 
     .habit-row.color-rose .habit-fill,
     .color-dot.rose {
       background: rgb(255, 204, 229);
+    }
+    .habit-row.color-rose {
+      background: rgba(255, 204, 229, 0.3);
     }
 
     .habit-row.color-ice .habit-fill,
     .color-dot.ice {
       background: rgb(204, 243, 255);
     }
+     .habit-row.color-ice {
+      background: rgba(204, 243, 255, 0.3);
+     }
     .color-reset {
       grid-column: 1 / -1; /* takes full width under the dots */
       justify-self: end;

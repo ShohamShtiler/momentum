@@ -28,6 +28,57 @@
   --active-bg: #2f2f2f;
   --active-text: #ffffff;
 
+
+  body[data-theme="dark"] {
+
+  /* COLOR PICKER DOTS */
+  .color-dot.mint { background: rgb(36, 94, 59); }
+  .color-dot.butter { background: rgb(212, 168, 50); }  // warm gold
+  .color-dot.sky { background: rgb(42, 88, 140); }
+  .color-dot.salmon { background: rgb(138, 58, 64); }
+  .color-dot.lavender { background: rgb(90, 64, 140); }
+  .color-dot.peach { background: rgb(140, 85, 60); }
+  .color-dot.aqua { background: rgb(32, 110, 110); }
+  .color-dot.lemon { background: rgb(230, 190, 60); }   // rich amber
+  .color-dot.rose { background: rgb(130, 50, 90); }
+  .color-dot.ice { background: rgb(40, 100, 130); }
+
+}
+
+body[data-theme="dark"] {
+
+  .habit-row.color-mint .habit-fill { background: rgb(36, 94, 59); }
+  .habit-row.color-mint { background: rgba(36, 94, 59, 0.25); }
+
+  .habit-row.color-butter .habit-fill { background: rgb(212, 168, 50); }
+  .habit-row.color-butter { background: rgba(212, 168, 50, 0.25); }
+
+  .habit-row.color-sky .habit-fill { background: rgb(42, 88, 140); }
+  .habit-row.color-sky { background: rgba(42, 88, 140, 0.25); }
+
+  .habit-row.color-salmon .habit-fill { background: rgb(138, 58, 64); }
+  .habit-row.color-salmon { background: rgba(138, 58, 64, 0.25); }
+
+  .habit-row.color-lavender .habit-fill { background: rgb(90, 64, 140); }
+  .habit-row.color-lavender { background: rgba(90, 64, 140, 0.25); }
+
+  .habit-row.color-peach .habit-fill { background: rgb(140, 85, 60); }
+  .habit-row.color-peach { background: rgba(140, 85, 60, 0.25); }
+
+  .habit-row.color-aqua .habit-fill { background: rgb(32, 110, 110); }
+  .habit-row.color-aqua { background: rgba(32, 110, 110, 0.25); }
+
+  .habit-row.color-lemon .habit-fill { background: rgb(230, 190, 60); }
+  .habit-row.color-lemon { background: rgba(230, 190, 60, 0.25); }
+
+  .habit-row.color-rose .habit-fill { background: rgb(130, 50, 90); }
+  .habit-row.color-rose { background: rgba(130, 50, 90, 0.25); }
+
+  .habit-row.color-ice .habit-fill { background: rgb(40, 100, 130); }
+  .habit-row.color-ice { background: rgba(40, 100, 130, 0.25); }
+
+}
+
   [data-theme="dark"] {
     /* Backgrounds */
     --bg: #0b0d12;

@@ -1,7 +1,8 @@
 import { StatCard } from "../cmps/StatCard";
 import { DASHBOARD_STATS } from "../data/dashboard.data";
 
-import { useEffect, useState } from "react";
+
+import { useEffect, useState , } from "react";
 import { habitService } from "../services/habit.service";
 import type { Habit, HabitColor, HabitUnit } from "../types/habit.types";
 
@@ -17,7 +18,9 @@ import {
 import { faUser, faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 import Lottie from "lottie-react";
-import doneAnim from "../assets/lottie/done.json";
+import doneLightAnim from "../assets/lottie/done-light.json";
+import doneDarkAnim from "../assets/lottie/done-dark.json";
+
 
 type DashboardPageProps = {
   isDark: boolean;
@@ -37,6 +40,8 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
 
   const [activeHabitId, setActiveHabitId] = useState<string | null>(null);
   const [colorForId, setColorForId] = useState<string | null>(null);
+
+  const doneAnim = isDark ? doneDarkAnim : doneLightAnim
 
   useEffect(() => {
     habitService.query().then(setHabits);
@@ -292,7 +297,10 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
                   key={habit.id}
                   className={`habit-row ${habit.color ? `color-${habit.color}` : ""}`}
                 >
-                  <div className="habit-fill" style={{ width: `${pct}%` }} />
+                  <div
+                    className={`habit-fill ${isCompleted ? "is-full" : ""}`}
+                    style={{ width: `${pct}%` }}
+                  />
 
                   <div className="habit-left">
                     <div className="habit-title-row">
@@ -357,7 +365,10 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
                         <FontAwesomeIcon icon={faPlus} />
                       </button>
                     ) : (
+
+                      
                       <div className="habit-done" title="Completed today">
+                        
                         <Lottie
                           animationData={doneAnim}
                           loop={false}
