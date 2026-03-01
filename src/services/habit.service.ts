@@ -109,9 +109,11 @@ function _saveToStorage(habits: Habit[]) {
 }
 
 function _getDateKey(date = new Date()) {
-  return date.toISOString().slice(0, 10); // YYYY-MM-DD
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, "0");
+  const d = String(date.getDate()).padStart(2, "0");
+  return `${y}-${m}-${d}`;
 }
-
 function _addDays(dateKey: string, diff: number) {
   const d = new Date(dateKey);
   d.setDate(d.getDate() + diff);

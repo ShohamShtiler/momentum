@@ -1,8 +1,7 @@
 import { StatCard } from "../cmps/StatCard";
 import { DASHBOARD_STATS } from "../data/dashboard.data";
 
-
-import { useEffect, useState , } from "react";
+import { useEffect, useState } from "react";
 import { habitService } from "../services/habit.service";
 import type { Habit, HabitColor, HabitUnit } from "../types/habit.types";
 
@@ -21,6 +20,7 @@ import Lottie from "lottie-react";
 import doneLightAnim from "../assets/lottie/done-light.json";
 import doneDarkAnim from "../assets/lottie/done-dark.json";
 
+const DAY_LABELS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 
 type DashboardPageProps = {
   isDark: boolean;
@@ -31,6 +31,7 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
   const stats = DASHBOARD_STATS;
   const todayIndex = new Date().getDay();
   const [habits, setHabits] = useState<Habit[]>([]);
+  const weekData = buildWeekData(habits);
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [draftTitle, setDraftTitle] = useState("");
@@ -41,7 +42,7 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
   const [activeHabitId, setActiveHabitId] = useState<string | null>(null);
   const [colorForId, setColorForId] = useState<string | null>(null);
 
-  const doneAnim = isDark ? doneDarkAnim : doneLightAnim
+  const doneAnim = isDark ? doneDarkAnim : doneLightAnim;
 
   useEffect(() => {
     habitService.query().then(setHabits);
@@ -130,6 +131,41 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
     "rose",
     "ice",
   ] as const;
+
+  function getDateKey(d: Date) {
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    return `${y}-${m}-${day}`;
+  }
+
+  // Sunday-based week start (matches your labels + getDay())
+  function getWeekStart(date = new Date()) {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - d.getDay()); // Sunday start
+    return d;
+  }
+
+  function buildWeekData(habits: Habit[]) {
+    const start = getWeekStart(new Date());
+
+    return DAY_LABELS.map((day, idx) => {
+      const d = new Date(start);
+      d.setDate(start.getDate() + idx);
+      const key = getDateKey(d);
+
+      const total = habits.length || 1;
+      const completed = habits.reduce((acc, h) => {
+        const val = h.history?.[key] ?? 0;
+        return acc + (val >= h.target ? 1 : 0);
+      }, 0);
+
+      const pct = Math.round((completed / total) * 100);
+
+      return { day, val: pct, completed, total, key };
+    });
+  }
 
   return (
     <section className="dashboard">
@@ -365,10 +401,7 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
                         <FontAwesomeIcon icon={faPlus} />
                       </button>
                     ) : (
-
-                      
                       <div className="habit-done" title="Completed today">
-                        
                         <Lottie
                           animationData={doneAnim}
                           loop={false}
@@ -440,18 +473,11 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
           </div>
 
           <div className="progress-bars">
-            {[
-              { day: "Sun", val: 70 },
-              { day: "Mon", val: 40 },
-              { day: "Tue", val: 65 },
-              { day: "Wed", val: 30 },
-              { day: "Thu", val: 80 },
-              { day: "Fri", val: 55 },
-              { day: "Sat", val: 20 },
-            ].map(({ day, val }, index) => (
+            {weekData.map(({ day, val, completed, total }, index) => (
               <div
                 key={day}
                 className={`bar-col ${index === todayIndex ? "is-active" : ""}`}
+                title={total ? `${completed}/${total} habits completed` : "No habits yet"}
               >
                 <div className="bar">
                   <div className="bar-fill" style={{ height: `${val}%` }} />

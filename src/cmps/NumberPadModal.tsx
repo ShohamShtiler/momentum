@@ -97,14 +97,14 @@ export function NumberPadModal({ unit, onClose, onSubmit }: Props) {
           </button>
         </div>
 
-        <div className="np-footer">
+        {/* <div className="np-footer">
           <button className="ghost-btn" onClick={onClose}>
             Cancel
           </button>
           <button className="primary-btn" onClick={onOk}>
             Add
           </button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
