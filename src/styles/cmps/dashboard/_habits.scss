@@ -1,0 +1,426 @@
+.dashboard {
+  .habit-actions {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .add-btn {
+    width: 34px;
+    height: 34px;
+    border-radius: 12px;
+    border: 1px solid var(--text);
+    color: var(--text);
+    display: grid;
+    place-items: center;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    background-color: inherit;
+  }
+
+  .add-popover {
+    position: absolute;
+    top: 44px;
+    right: 0;
+    width: 300px;
+    padding: 14px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    z-index: 20;
+  }
+
+  .field {
+    display: grid;
+    gap: 6px;
+    margin-bottom: 10px;
+
+    label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    input,
+    select {
+      height: 34px;
+      padding: 0 10px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card-strong);
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus,
+    select:focus {
+      border-color: rgba(230, 195, 92, 0.55);
+      box-shadow: 0 0 0 4px rgba(230, 195, 92, 0.18);
+    }
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .popover-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 6px;
+  }
+
+  .primary-btn {
+    border: none;
+    border-radius: 12px;
+    padding: 8px 12px;
+    background: var(--active-bg);
+    color: var(--active-text);
+    cursor: pointer;
+    font-weight: 700;
+  }
+
+  .unit-select {
+    position: relative;
+  }
+
+  .unit-trigger {
+    width: 100%;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card-strong);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .unit-menu {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    width: 100%;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--bg-unit);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    z-index: 50;
+  }
+
+  .unit-option {
+    width: 100%;
+    padding: 6px 10px;
+    border: none;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    color: var(--text);
+
+    &:hover {
+      background: var(--accent-soft);
+    }
+  }
+
+  .habit-list {
+    list-style: none;
+    padding: 0;
+    padding-right: 6px;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+    overflow-y: auto;
+    flex: 1;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.12);
+      border-radius: 20px;
+      transition: background 0.2s ease;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgba(0, 0, 0, 0.22);
+    }
+
+    .habit-row {
+      position: relative;
+      overflow: visible;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+
+      padding: 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(16, 24, 40, 0.06);
+      background: var(--card-strong);
+    }
+
+    .habit-fill {
+      position: absolute;
+      inset: 0;
+      width: 0%;
+      background: var(--accent-soft);
+      border-radius: 16px 0 0 16px;
+      pointer-events: none;
+      transition: width 260ms ease;
+    }
+
+    .habit-fill.is-full {
+      border-radius: 16px;
+    }
+
+    .habit-left {
+      position: relative;
+      display: grid;
+      gap: 6px;
+
+      .habit-title-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .habit-streak {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 2px 8px;
+        border-radius: 20px;
+        background: rgba(255, 120, 0, 0.12);
+        color: #ff7a00;
+      }
+    }
+
+    .habit-title {
+      font-weight: 700;
+    }
+
+    .habit-pill {
+      width: fit-content;
+      padding: 4px 8px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.35);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .habit-actions-right {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      .habit-done {
+        width: 40px; // match your + button
+        height: 40px;
+        border-radius: 50%;
+        display: grid;
+        place-items: center;
+        animation: fadeInDone 0.25s ease;
+      }
+
+      @keyframes fadeInDone {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+    }
+
+    .color-btn {
+      opacity: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      transition: all 0.2s ease;
+
+      &:hover {
+        scale: 1.1;
+      }
+    }
+
+    .habit-row:hover .color-btn {
+      opacity: 1;
+    }
+
+    .color-menu {
+      position: absolute;
+      top: 44px;
+      right: 86px;
+      display: grid;
+      grid-template-columns: repeat(5, 18px);
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+
+    .color-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+    }
+
+    .habit-row.color-mint .habit-fill,
+    .color-dot.mint {
+      background: rgb(186, 255, 201);
+    }
+    .habit-row.color-mint {
+      background: rgba(186, 255, 201, 0.3);
+    }
+
+    .habit-row.color-butter .habit-fill,
+    .color-dot.butter {
+      background: rgb(255, 255, 186);
+    }
+    .habit-row.color-butter {
+      background: rgba(255, 255, 186, 0.3);
+    }
+
+    .habit-row.color-sky .habit-fill,
+    .color-dot.sky {
+      background: rgb(186, 225, 255);
+    }
+    .habit-row.color-sky {
+      background: rgba(186, 225, 255, 0.3);
+    }
+
+    .habit-row.color-salmon .habit-fill,
+    .color-dot.salmon {
+      background: rgb(255, 179, 186);
+    }
+    .habit-row.color-salmon {
+      background: rgba(255, 179, 186, 0.3);
+    }
+
+    .habit-row.color-lavender .habit-fill,
+    .color-dot.lavender {
+      background: rgb(218, 186, 255);
+    }
+    .habit-row.color-lavender {
+      background: rgba(218, 186, 255, 0.3);
+    }
+
+    .habit-row.color-peach .habit-fill,
+    .color-dot.peach {
+      background: rgb(255, 218, 193);
+    }
+    .habit-row.color-peach {
+      background: rgba(255, 218, 193, 0.3);
+    }
+
+    .habit-row.color-aqua .habit-fill,
+    .color-dot.aqua {
+      background: rgb(186, 255, 244);
+    }
+    .habit-row.color-aqua {
+      background: rgba(186, 255, 244, 0.3);
+    }
+
+    .habit-row.color-lemon .habit-fill,
+    .color-dot.lemon {
+      background: rgb(255, 247, 186);
+    }
+    .habit-row.color-lemon {
+      background: rgba(255, 247, 186, 0.3);
+    }
+
+    .habit-row.color-rose .habit-fill,
+    .color-dot.rose {
+      background: rgb(255, 204, 229);
+    }
+    .habit-row.color-rose {
+      background: rgba(255, 204, 229, 0.3);
+    }
+
+    .habit-row.color-ice .habit-fill,
+    .color-dot.ice {
+      background: rgb(204, 243, 255);
+    }
+    .habit-row.color-ice {
+      background: rgba(204, 243, 255, 0.3);
+    }
+
+    .color-reset {
+      grid-column: 1 / -1;
+      justify-self: end;
+      margin-left: 6px;
+      border: 1px solid var(--border);
+      background: var(--card-strong);
+      border-radius: 20px;
+      padding: 6px 10px;
+      cursor: pointer;
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 12px;
+    }
+
+    .add-progress-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 800;
+      display: grid;
+      place-items: center;
+    }
+
+    .delete-btn {
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .habit-row:hover .delete-btn {
+      opacity: 1;
+    }
+
+    .delete-btn:hover {
+      color: #ff5c5c;
+    }
+  }
+}

@@ -1,0 +1,60 @@
+.panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 24px;
+    backdrop-filter: blur(10px);
+  
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .stat-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+
+    .stat-top {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .stat-title {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+    }
+  }
+
+  .stat-icon {
+    font-size: 14px;
+  }
+
+  .icon-green {
+    color: #22c55e; // clean SaaS green
+  }
+
+  .icon-fire {
+    color: #f97316; // modern orange
+  }
+
+  .icon-default {
+    color: var(--text);
+  }
+}

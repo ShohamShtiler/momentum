@@ -1,0 +1,50 @@
+.dashboard-content {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: start;
+  
+  .card {
+    max-height: 440px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: var(--shadow);
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+
+      h3 {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+      }
+    }
+
+    .ghost-btn {
+      display: grid;
+      place-items: center;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      border-radius: 20px;
+      padding: 8px 12px;
+      cursor: pointer;
+      color: var(--muted);
+    }
+  }
+
+  .schedule-card,
+  .progress-card {
+    min-height: 270px;
+    max-height: 300px;
+  }
+}

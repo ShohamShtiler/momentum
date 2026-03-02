@@ -1,0 +1,51 @@
+.hero {
+    margin-top: 24px;
+    background: var(--active-bg);
+    color: var(--active-text);
+    border-radius: 24px;
+    padding: 28px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+
+    .hero-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .hero-text {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      h2 {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+      }
+
+      p {
+        margin: 0;
+        opacity: 0.85;
+      }
+
+      .goal {
+        font-size: 13px;
+        opacity: 0.7;
+      }
+    }
+
+    .hero-btn {
+      background: var(--accent);
+      border: none;
+      padding: 12px 20px;
+      border-radius: 20px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+  }
