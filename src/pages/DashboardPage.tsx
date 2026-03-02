@@ -35,7 +35,7 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
 
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [draftTitle, setDraftTitle] = useState("");
-  const [draftTarget, setDraftTarget] = useState<number>(1);
+  const [draftTarget, setDraftTarget] = useState<string>("1");
   const [draftUnit, setDraftUnit] = useState<HabitUnit>("count");
   const [isUnitOpen, setIsUnitOpen] = useState(false);
 
@@ -61,7 +61,7 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
   function onCloseAddHabit() {
     setIsAddOpen(false);
     setDraftTitle("");
-    setDraftTarget(1);
+    setDraftTarget("1");
     setDraftUnit("count");
   }
 
@@ -69,7 +69,8 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
     const title = draftTitle.trim();
     if (!title) return;
 
-    habitService.addHabit(title, draftTarget, draftUnit).then((updated) => {
+    const targetNum = Math.max(1, Number(draftTarget) || 1);
+    habitService.addHabit(title, targetNum, draftUnit).then((updated) => {
       setHabits(updated);
       onCloseAddHabit();
     });
@@ -255,7 +256,7 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
                     <input
                       value={draftTitle}
                       onChange={(ev) => setDraftTitle(ev.target.value)}
-                      placeholder="e.g. Water"
+                      placeholder="Habit name (e.g. Drink water)"
                       autoFocus
                     />
                   </div>
@@ -265,9 +266,16 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
                       <label>Target</label>
                       <input
                         type="number"
+                        inputMode="numeric"
                         min={1}
                         value={draftTarget}
-                        onChange={(ev) => setDraftTarget(+ev.target.value || 1)}
+                        onChange={(ev) => setDraftTarget(ev.target.value)}
+                        onBlur={() => {
+                          const n = Number(draftTarget);
+                          if (!draftTarget || Number.isNaN(n) || n < 1)
+                            setDraftTarget("1");
+                          else setDraftTarget(String(Math.floor(n)));
+                        }}
                       />
                     </div>
 
@@ -477,7 +485,11 @@ export function DashboardPage({ isDark, onToggleTheme }: DashboardPageProps) {
               <div
                 key={day}
                 className={`bar-col ${index === todayIndex ? "is-active" : ""}`}
-                title={total ? `${completed}/${total} habits completed` : "No habits yet"}
+                title={
+                  total
+                    ? `${completed}/${total} habits completed`
+                    : "No habits yet"
+                }
               >
                 <div className="bar">
                   <div className="bar-fill" style={{ height: `${val}%` }} />
